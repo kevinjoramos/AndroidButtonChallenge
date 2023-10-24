@@ -3,6 +3,7 @@ package kevinjoramos.androidcodingchallenge.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kevinjoramos.androidcodingchallenge.data.network.MockedNetworkResponse
 import kevinjoramos.androidcodingchallenge.data.repository.PrimaryRepository
 import kevinjoramos.androidcodingchallenge.ui.state.PrimaryUiState
 import kotlinx.coroutines.Job
@@ -20,25 +21,34 @@ class PrimaryViewModel @Inject constructor(
     // other viewmodel dependencies...
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<PrimaryUiState> = MutableStateFlow(PrimaryUiState.Loading)
+    private val _uiState: MutableStateFlow<PrimaryUiState> = MutableStateFlow(PrimaryUiState.Initial)
     val uiState: StateFlow<PrimaryUiState> = _uiState.asStateFlow()
 
     private var fetchJob: Job? = null
 
-    fun fetchMessage() {
+    fun makeAsyncRequest() {
         fetchJob?.cancel()
+
+        _uiState.value = PrimaryUiState.Loading
         fetchJob = viewModelScope.launch {
             try {
-                val message = repository.getGreeting()
+                val response = repository.mockedResponse()
+
                 _uiState.update {
-                    when (it) {
-                        is PrimaryUiState.Success -> it.copy(message = message)
-                        else -> PrimaryUiState.Success(message)
+                    when (response) {
+                        is MockedNetworkResponse.Success -> {
+                            val data = response.data as String
+                            PrimaryUiState.Success(data)
+                        }
+                        else -> {
+                            val errorMessage = response.error as String
+                            PrimaryUiState.Error(null, errorMessage)
+                        }
                     }
                 }
             } catch (ioe: IOException) {
                 _uiState.update {
-                    PrimaryUiState.Error(ioe, ioe.message)
+                    PrimaryUiState.Error(ioe, "Error")
                 }
             }
         }

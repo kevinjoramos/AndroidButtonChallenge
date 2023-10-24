@@ -1,9 +1,27 @@
 package kevinjoramos.androidcodingchallenge.ui.screens
 
+import androidx.collection.CircularIntArray
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kevinjoramos.androidcodingchallenge.ui.state.PrimaryUiState
@@ -15,16 +33,66 @@ fun PrimaryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.fetchMessage()
-
-    when (uiState){
-        is PrimaryUiState.Loading -> CircularProgressIndicator()
-        is PrimaryUiState.Error -> Greeting((uiState as PrimaryUiState.Error).message ?: "There was an unexpected error.")
-        else -> Greeting(message = (uiState as PrimaryUiState.Success).message)
+    val backgroundColor = when (uiState) {
+        is PrimaryUiState.Success -> Color.Green
+        is PrimaryUiState.Error -> Color.Red
+        else -> Color.DarkGray
     }
-}
 
-@Composable
-fun Greeting(message: String) {
-    Text(text = message)
+    val buttonLabel = when (uiState) {
+        is PrimaryUiState.Loading -> "Loading"
+        else -> "Login"
+    }
+
+    val stateMessage = when (uiState){
+        is PrimaryUiState.Initial -> "Pending"
+        is PrimaryUiState.Loading -> "Loading"
+        is PrimaryUiState.Error -> (uiState as PrimaryUiState.Error).stateText
+        is PrimaryUiState.Success -> (uiState as PrimaryUiState.Success).stateText
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+    ) {
+
+        Button(
+            onClick = { viewModel.makeAsyncRequest() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.White,
+                contentColor = Color.Black
+            ),
+
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = buttonLabel,
+                    fontSize = 40.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                if (uiState is PrimaryUiState.Loading) {
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    CircularProgressIndicator(
+                        color = Color.Black
+                    )
+                }
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Text(
+            text = stateMessage,
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
 }
