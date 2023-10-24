@@ -73,7 +73,7 @@ fun PrimaryScreen(
                 Text(
                     text = buttonLabel,
                     fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
 
                 if (uiState is PrimaryUiState.Loading) {
@@ -92,7 +92,8 @@ fun PrimaryScreen(
         Text(
             text = stateMessage,
             fontSize = 30.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.White
         )
     }
 }
