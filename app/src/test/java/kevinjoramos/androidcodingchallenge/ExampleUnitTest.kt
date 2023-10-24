@@ -1,4 +1,4 @@
-package kevinjoramos.androidapptemplate
+package kevinjoramos.androidcodingchallenge
 
 import org.junit.Test
 

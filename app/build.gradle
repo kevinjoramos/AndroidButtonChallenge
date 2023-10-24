@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'kevinjoramos.androidapptemplate'
+    namespace 'kevinjoramos.androidcodingchallenge'
     compileSdk 34
 
     defaultConfig {
-        applicationId "kevinjoramos.androidapptemplate"
+        applicationId "kevinjoramos.androidcodingchallenge"
         minSdk 24
         targetSdk 34
         versionCode 1

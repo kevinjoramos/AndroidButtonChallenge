@@ -1,10 +1,10 @@
-package kevinjoramos.androidapptemplate.ui.viewmodel
+package kevinjoramos.androidcodingchallenge.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kevinjoramos.androidapptemplate.data.repository.TemplateRepository
-import kevinjoramos.androidapptemplate.ui.state.TemplateUiState
+import kevinjoramos.androidcodingchallenge.data.repository.PrimaryRepository
+import kevinjoramos.androidcodingchallenge.ui.state.PrimaryUiState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,13 +15,13 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class TemplateViewModel @Inject constructor(
-    private val repository: TemplateRepository
+class PrimaryViewModel @Inject constructor(
+    private val repository: PrimaryRepository
     // other viewmodel dependencies...
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<TemplateUiState> = MutableStateFlow(TemplateUiState.Loading)
-    val uiState: StateFlow<TemplateUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<PrimaryUiState> = MutableStateFlow(PrimaryUiState.Loading)
+    val uiState: StateFlow<PrimaryUiState> = _uiState.asStateFlow()
 
     private var fetchJob: Job? = null
 
@@ -32,13 +32,13 @@ class TemplateViewModel @Inject constructor(
                 val message = repository.getGreeting()
                 _uiState.update {
                     when (it) {
-                        is TemplateUiState.Success -> it.copy(message = message)
-                        else -> TemplateUiState.Success(message)
+                        is PrimaryUiState.Success -> it.copy(message = message)
+                        else -> PrimaryUiState.Success(message)
                     }
                 }
             } catch (ioe: IOException) {
                 _uiState.update {
-                    TemplateUiState.Error(ioe, ioe.message)
+                    PrimaryUiState.Error(ioe, ioe.message)
                 }
             }
         }

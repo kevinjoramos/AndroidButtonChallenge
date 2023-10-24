@@ -1,8 +1,8 @@
-package kevinjoramos.androidapptemplate.data.repository
+package kevinjoramos.androidcodingchallenge.data.repository
 
 import javax.inject.Inject
 
-class TemplateRepository @Inject constructor(
+class PrimaryRepository @Inject constructor(
     // data source classes here...
 ) {
     fun getGreeting(): String = "Hello World!"
