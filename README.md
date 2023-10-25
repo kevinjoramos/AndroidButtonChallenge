@@ -1,7 +1,10 @@
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
-In this project, I was tasked with creating a button, that when pushed, would return a mock response object after a delay. My Ui needed to be responsive and change itself according to the current state of the app.
+![Demo](/images/screen-20231025-092129.gif)
+
+In this project, I was tasked with creating a button, that when pushed, would return a mock response object after a delay. My Ui needed to be responsive and change itself according to the response.
 
 While I'm aware this project is very simple and can be completed with a single file, I decided to treat this as an enterprise level app in order to show my current knowledge of app architecture.
 I've done my best here to follow the recommended app architecture from Google, which includes building a ui layer and a data layer with MVVM.
@@ -22,11 +25,11 @@ This member function is used by the repository to mock our response when called.
 
 ## UI Layer
 
-Our view-model class receives a reference to the repository instance. We also wrap our uiState in a StateFlow so that we can emit all of its updates to its collectors in the Ui.
+Our view-model class receives a reference to the repository instance. We also wrap our uiState in a StateFlow so that we can emit all of its updates to its collectors in the Ui. We only update the ui state from the view-model.
 
 ![Viewmodel](/images/img_3.png)
 
-Here is our data object for representing the ui state. It also uses sealed classes to communicate what the overall state of the Ui should be.
+Here is our data object for representing the ui state. It also uses sealed classes to communicate what the state of the request is.
 
 ![Ui State](/images/img_4.png)
 
@@ -34,5 +37,5 @@ Next, you will see that the following member function of the view-model is used 
 
 ![Try Catch Block](/images/img_5.png)
 
-Finally, the ui state is observed in the composable that represents the screen being looked at. Our viewmodel function above is called by our Button composable.
+Finally, the ui state is observed in the composable that represents the screen being looked at. Our view-model function above is called whenever our button composable is pushed.xx`
 
