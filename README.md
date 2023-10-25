@@ -8,15 +8,15 @@ I've done my best here to follow the recommended app architecture from Google, w
 
 ## Data Layer
 
-Usually our repository class would have dependencies that would do the heavy lifting for making requests to a data source. However, since we are generating a mocked response, it didn't make sense to make these dependencies.\
+Usually our repository class would have dependencies that would do the heavy lifting for making requests to a data source. However, since we are generating a mocked response, it didn't make sense to make these dependencies.
 
 ![Repository lack of dependencies](images/img.png)
 
-Using Kotlin's sealed classes feature, I made this class that can act as an all purpose container for both successful and unsuccessful responses from the data source.
+Using Kotlin's sealed classes feature, I added this class that can act as an all purpose container for both successful and unsuccessful responses from the data source.
 
 ![Network Response Sealed classes](images/img_1.png)
 
-This member function is used by the repository to mock our response when called. Here we use withContext() in order execute this function off the main thread.
+This member function is used by the repository to mock our response when called. It uses withContext() to execute this function off the main thread.
 
 ![Mock function](images/img_2.png)
 
