@@ -1,18 +1,17 @@
 package kevinjoramos.androidcodingchallenge.ui.screens
 
-import androidx.collection.CircularIntArray
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kevinjoramos.androidcodingchallenge.ui.state.PrimaryUiState
+import kevinjoramos.androidcodingchallenge.ui.theme.AndroidCodingChallengeTheme
 import kevinjoramos.androidcodingchallenge.ui.viewmodel.PrimaryViewModel
 
 @Composable
@@ -32,17 +32,6 @@ fun PrimaryScreen(
     viewModel: PrimaryViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val backgroundColor = when (uiState) {
-        is PrimaryUiState.Success -> Color.Green
-        is PrimaryUiState.Error -> Color.Red
-        else -> Color.DarkGray
-    }
-
-    val buttonLabel = when (uiState) {
-        is PrimaryUiState.Loading -> "Loading"
-        else -> "Login"
-    }
 
     val stateMessage = when (uiState){
         is PrimaryUiState.Initial -> "Pending"
@@ -56,31 +45,37 @@ fun PrimaryScreen(
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            //.background(backgroundColor)
     ) {
 
         Button(
             onClick = { viewModel.makeAsyncRequest() },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.White,
-                contentColor = Color.Black
-            ),
-
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = when (uiState) {
+                    is PrimaryUiState.Loading -> Color.Gray
+                    else -> MaterialTheme.colorScheme.primary
+                }
+            )
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = buttonLabel,
+                    text = when (uiState) {
+                        is PrimaryUiState.Loading -> "Loading"
+                        else -> "Login"
+                    },
                     fontSize = 40.sp,
                     fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(5.dp)
                 )
 
                 if (uiState is PrimaryUiState.Loading) {
-                    Spacer(modifier = Modifier.width(10.dp))
+                    Spacer(modifier = Modifier.width(20.dp))
 
                     CircularProgressIndicator(
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -90,10 +85,14 @@ fun PrimaryScreen(
         Spacer(modifier = Modifier.height(25.dp))
 
         Text(
-            text = stateMessage,
-            fontSize = 30.sp,
+            text = "State = $stateMessage",
+            fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White
+            color = when (uiState) {
+                is PrimaryUiState.Success -> Color.Green
+                is PrimaryUiState.Error -> Color.Red
+                else -> MaterialTheme.colorScheme.onBackground
+            }
         )
     }
 }
